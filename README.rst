@@ -8,7 +8,7 @@ A small toolbox of wind data analysis plotting tools.
 Concept
 -------
 
-A micro toolbox for plotting data for wind farm analysis. 
+A micro toolbox for plotting wind data 
 
 The Tools
 ---------
