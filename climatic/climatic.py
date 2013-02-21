@@ -4,12 +4,12 @@ _________
 A micro toolbox of wind data plotting tools
 
 '''
-
+from __future__ import division
 import matplotlib.pyplot as plt
 import numpy as np
 import math 
 
-def wind_rose(freqs, sectors=12)
+def wind_rose(freqs, sectors=12, title='Wind Rose'):
     '''
     Plots a wind rose using sectorwise frequencies
     
@@ -20,26 +20,33 @@ def wind_rose(freqs, sectors=12)
     sectors: int
         Number of sectors to plot. Must be the same as len(freqs) to
         avoid error
+    title: string
+        Plot title
         
     Returns:
     ________
     Wind rose plot
     '''
     
+    #Set up binned frequencies and labels
     freqs_pct=np.array(freqs)/100 
     bins = 360/sectors 
-    theta=np.array(range(0,360,bins)) 
-    theta_rad = Theta*math.pi/180
+    theta=np.arange(0, 360, bins) 
+    theta_rad = theta*math.pi/180
     ticklabs = [str(x) for x in theta]     
     
+    #Plot, with N correctly oriented
     fig = plt.figure(figsize=(8,8))
     ax=fig.add_axes([0.1, 0.1, 0.8, 0.8], polar=True)     
     ax.set_theta_zero_location('N')
     ax.set_theta_direction(-1) 
-    ax.set_thetagrids(Theta, labels=ticklabs)
+    ax.set_thetagrids(theta, labels=ticklabs)
+    ax.set_title(title)
     width = 30*math.pi/180
-    adj_theta = ThetaRad-width/2
+    adj_theta = theta_rad-width/2
     bars = ax.bar(adj_theta, freqs_pct, width=width, bottom=0.0)
     for bar in bars:
-        bar.set_alpha(0.6)
+        bar.set_alpha(0.6)    
     plt.show()
+    
+    
