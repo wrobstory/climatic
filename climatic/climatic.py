@@ -1,7 +1,7 @@
 '''
 Climatic
 _________
-A small toolbox of wind data analysis tools
+A micro toolbox of wind data plotting tools
 
 '''
 
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math 
 
-def wind_rose(freqs, sectors=12, )
+def wind_rose(freqs, sectors=12)
     '''
     Plots a wind rose using sectorwise frequencies
     
