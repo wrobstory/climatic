@@ -36,7 +36,7 @@ class MetMast(object):
         self.height = height
         self.time_zone = time_zone
         
-    def wind_import(self, path=None, header_row=None, time_col=None,
+    def wind_import(self, path, header_row=None, time_col=None,
                     delimiter=None):
         '''Wind data import. This is a wrapper on the pandas read_table 
         method.
