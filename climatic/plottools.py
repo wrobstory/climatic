@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 '''
-Climatic
+Climatic plotting tools
 _________
 A micro toolbox of wind data plotting tools
 
@@ -48,5 +50,6 @@ def wind_rose(freqs, sectors=12, title='Wind Rose'):
     for bar in bars:
         bar.set_alpha(0.6)    
     plt.show()
+    
     
     
