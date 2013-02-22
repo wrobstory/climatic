@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import metmast
-from plottools import wind_rose
+from climatic.mast import MetMast
+from climatic.plottools import wind_rose

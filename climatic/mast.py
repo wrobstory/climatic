@@ -7,8 +7,9 @@ A straightforward met mast import class built with the pandas library
 
 '''
 import pandas as pd
+from pandas import DataFrame
 
-class MetMast(pd.DataFrame): 
+class MetMast(object): 
     '''Subclass of the pandas dataframe built to import and quickly analyze
        met mast data.'''
        
@@ -34,3 +35,11 @@ class MetMast(pd.DataFrame):
         self.long = long
         self.height = height
         self.time_zone = time_zone
+        
+    def wind_import(self, path=None, header_row=None, time_col=None,
+                    delimiter=None):
+        '''Wind data import. This is a wrapper on the pandas read_table 
+        method.
+        '''
+        self.data = pd.read_table(path, header=header_row, index_col=time_col, 
+                                  parse_dates=True, delimiter=delimiter)
