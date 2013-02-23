@@ -11,7 +11,7 @@ Concept
 A micro toolbox for analyzing and plotting wind data
 
 Data Tools
----------_
+-----------
 
 ``MetMast``
     Import and manipulate met mast data
