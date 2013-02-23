@@ -13,7 +13,7 @@ class MetMast(object):
     '''Subclass of the pandas dataframe built to import and quickly analyze
        met mast data.'''
        
-    def __init__(self, lat=None, long=None, height=None, time_zone=None):
+    def __init__(self, lat=None, lon=None, height=None, time_zone=None):
         '''Data structure with both relevant information about the mast
         itself (coordinates, height, time zone), as well as methods to process
         the met mast data and manipulate it using tools from the pandas
@@ -32,7 +32,7 @@ class MetMast(object):
             http://pytz.sourceforge.net/
         '''
         self.lat = lat
-        self.long = long
+        self.lon = lon
         self.height = height
         self.time_zone = time_zone
         
