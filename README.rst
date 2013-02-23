@@ -17,7 +17,7 @@ Data Tools
     Import and manipulate met mast data
     
 Plotting Tools
-______________
+--------------
 
 ``wind_rose``
     Plot a directional wind rose with as many sectors as you like. 
