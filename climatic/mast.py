@@ -37,9 +37,26 @@ class MetMast(object):
         self.time_zone = time_zone
         
     def wind_import(self, path, header_row=None, time_col=None,
-                    delimiter=None):
-        '''Wind data import. This is a wrapper on the pandas read_table 
-        method.
+                    delimiter=None, **kwargs):
+        '''Wind data import. This is a very thin wrapper on the pandas read_table 
+        method, with the option to pass keyword arguments to pandas read_table 
+        if needed. 
+    
+        Parameters:
+        ----------
+        path: string
+            Path to file to be read
+        header_row: int
+            Row containing columns headers
+        time_col: int
+            Column with the timestamps
+        delimiter: string
+            File delimiter
+    
+        Returns: 
+        --------
+        DataFrame with wind data
         '''
         self.data = pd.read_table(path, header=header_row, index_col=time_col, 
-                                  parse_dates=True, delimiter=delimiter)
+                                  parse_dates=True, delimiter=delimiter,
+                                  **kwargs)
