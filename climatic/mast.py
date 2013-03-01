@@ -60,3 +60,31 @@ class MetMast(object):
         self.data = pd.read_table(path, header=header_row, index_col=time_col, 
                                   parse_dates=True, delimiter=delimiter,
                                   **kwargs)
+    def sectorwise(sectors=12, **kwargs):
+        '''Bin the wind data sectorwise
+        '''
+        pass
+        # if not self.data:
+            # print(("You have not imported any data. Use the 'wind_import'"
+                    # "method to load data into your object"))
+        # cuts = 360/sectors
+        # bins = [0, cuts/2]
+        # bins.extend(range(cuts, 360, cuts))
+        # bins.extend([360-cuts/2, 360])
+        # cats = pd.cut(self.data['Average Direction'], bins, right=False)
+        # array = pd.value_counts(cats)
+        
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
