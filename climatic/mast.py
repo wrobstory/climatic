@@ -60,6 +60,13 @@ class MetMast(object):
         self.data = pd.read_table(path, header=header_row, index_col=time_col, 
                                   parse_dates=True, delimiter=delimiter,
                                   **kwargs)
+                                  
+    def mean_ws(time_period='all'):
+        '''
+        Averaging of mean wind speed
+        '''
+        pass 
+        
     def sectorwise(sectors=12, **kwargs):
         '''Bin the wind data sectorwise
         '''
