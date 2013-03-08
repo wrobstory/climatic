@@ -3,4 +3,6 @@ include README.rst
 include LICENSE.txt
 include setup.py
 
-recursive-include climatic *.json
+recursive-include climatic *
+recursive-include examples *
+recursive-include tests *

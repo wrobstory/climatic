@@ -18,14 +18,13 @@ class TestMast(unittest.TestCase):
         '''Test the importer vs. standard panda dataframe using
         pandas testing suite'''
         test_mast = MetMast()
-        col_names = ['WS', 'St Dev', 'Dir']
+        col_names = ['Wind Speed 1', 'Std Dev 1', 'Wind Direction 1']
         true_df = pd.read_table(r'test_data_import.csv', header=0,
                                 index_col=0,delimiter=',',
                                 names=col_names)
         test_mast.wind_import(r'test_data_import.csv', header_row=0, 
                               time_col=0, delimiter=',', names=col_names)
         assert_almost_equal(true_df, test_mast.data)
-        
                 
 def main():
     unittest.main()

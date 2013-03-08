@@ -6,6 +6,9 @@ MetMast
 A straightforward met mast import class built with the pandas library
 
 '''
+from __future__ import print_function
+import os
+import json
 import pandas as pd
 from pandas import DataFrame
 
@@ -61,6 +64,30 @@ class MetMast(object):
                                   parse_dates=True, delimiter=delimiter,
                                   **kwargs)
                                   
+        '''Smart parse columns for Parameters'''
+        data_columns = self.data.columns.tolist()
+        data_columns = [x.strip().lower() for x in data_columns]
+        
+        #Read json from pkg
+        pkg_dir, filename = os.path.split(__file__)
+        json_path = os.path.join(pkg_dir, 'data', 'data_parse.json')
+        with open(json_path, 'r') as f: 
+            parse_strings = json.load(f)
+        
+        #Search dict for parameter match, rename column
+        iter_dict = {'Std Dev': 1, 'Wind Speed': 1, 'Wind Direction': 1}
+        new_columns = []
+        for x, cols in enumerate(data_columns): 
+            get_col = parse_strings.get(cols)
+            if get_col:
+                new_col = '{0} {1}'.format(get_col, str(iter_dict[get_col]))
+                new_columns.append(new_col)
+                iter_dict[get_col] += 1
+            else: 
+                print('Header parser could not parse ', cols)
+                new_columns.append(cols)
+        self.data.columns = new_columns
+                                       
     def mean_ws(time_period='all'):
         '''
         Averaging of mean wind speed
@@ -71,15 +98,15 @@ class MetMast(object):
         '''Bin the wind data sectorwise
         '''
         pass
-        # if not self.data:
-            # print(("You have not imported any data. Use the 'wind_import'"
-                    # "method to load data into your object"))
-        # cuts = 360/sectors
-        # bins = [0, cuts/2]
-        # bins.extend(range(cuts, 360, cuts))
-        # bins.extend([360-cuts/2, 360])
-        # cats = pd.cut(self.data['Average Direction'], bins, right=False)
-        # array = pd.value_counts(cats)
+        if not self.data:
+            print(("You have not imported any data. Use the 'wind_import'"
+                   "method to load data into your object"))
+        cuts = 360/sectors
+        bins = [0, cuts/2]
+        bins.extend(range(cuts, 360, cuts))
+        bins.extend([360-cuts/2, 360])
+        cats = pd.cut(self.data['Average Direction'], bins, right=False)
+        array = pd.value_counts(cats)
         
                                   
                                   
