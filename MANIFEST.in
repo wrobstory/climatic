@@ -1,0 +1,6 @@
+include MANIFEST.in
+include README.rst
+include LICENSE.txt
+include setup.py
+
+recursive-include climatic *.json
