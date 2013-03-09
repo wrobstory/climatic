@@ -39,8 +39,8 @@ class MetMast(object):
         self.height = height
         self.time_zone = time_zone
         
-    def wind_import(self, path, header_row=None, time_col=None,
-                    delimiter=None, **kwargs):
+    def wind_import(self, path, columns=None, header_row=None, time_col=None,
+                    delimiter=None, parse_cols=True, **kwargs):
         '''Wind data import. This is a very thin wrapper on the pandas read_table 
         method, with the option to pass keyword arguments to pandas read_table 
         if needed. 
@@ -64,29 +64,30 @@ class MetMast(object):
                                   parse_dates=True, delimiter=delimiter,
                                   **kwargs)
                                   
-        '''Smart parse columns for Parameters'''
-        data_columns = self.data.columns.tolist()
-        data_columns = [x.strip().lower() for x in data_columns]
+        if parse_cols:                         
+            '''Smart parse columns for Parameters'''
+            data_columns = self.data.columns.tolist()
+            data_columns = [x.strip().lower() for x in data_columns]
         
-        #Read json from pkg
-        pkg_dir, filename = os.path.split(__file__)
-        json_path = os.path.join(pkg_dir, 'data', 'data_parse.json')
-        with open(json_path, 'r') as f: 
-            parse_strings = json.load(f)
+            #Read json from pkg
+            pkg_dir, filename = os.path.split(__file__)
+            json_path = os.path.join(pkg_dir, 'data', 'data_parse.json')
+            with open(json_path, 'r') as f: 
+                parse_strings = json.load(f)
         
-        #Search dict for parameter match, rename column
-        iter_dict = {'Std Dev': 1, 'Wind Speed': 1, 'Wind Direction': 1}
-        new_columns = []
-        for x, cols in enumerate(data_columns): 
-            get_col = parse_strings.get(cols)
-            if get_col:
-                new_col = '{0} {1}'.format(get_col, str(iter_dict[get_col]))
-                new_columns.append(new_col)
-                iter_dict[get_col] += 1
-            else: 
-                print('Header parser could not parse ', cols)
-                new_columns.append(cols)
-        self.data.columns = new_columns
+            #Search dict for parameter match, rename column
+            iter_dict = {'Std Dev': 1, 'Wind Speed': 1, 'Wind Direction': 1}
+            new_columns = []
+            for x, cols in enumerate(data_columns): 
+                get_col = parse_strings.get(cols)
+                if get_col:
+                    new_col = '{0} {1}'.format(get_col, str(iter_dict[get_col]))
+                    new_columns.append(new_col)
+                    iter_dict[get_col] += 1
+                else: 
+                    print('Header parser could not parse ', cols)
+                    new_columns.append(cols)
+            self.data.columns = new_columns
                                        
     def mean_ws(time_period='all'):
         '''
