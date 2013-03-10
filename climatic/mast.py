@@ -9,8 +9,9 @@ A straightforward met mast import class built with the pandas library
 from __future__ import print_function
 import os
 import json
+import pickle
 import pandas as pd
-from pandas import DataFrame
+import header_classifier as hclass
 
 class MetMast(object): 
     '''Subclass of the pandas dataframe built to import and quickly analyze
@@ -40,7 +41,7 @@ class MetMast(object):
         self.time_zone = time_zone
         
     def wind_import(self, path, columns=None, header_row=None, time_col=None,
-                    delimiter=None, parse_cols=True, **kwargs):
+                    delimiter=None, smart_headers=True, **kwargs):
         '''Wind data import. This is a very thin wrapper on the pandas read_table 
         method, with the option to pass keyword arguments to pandas read_table 
         if needed. 
@@ -64,29 +65,28 @@ class MetMast(object):
                                   parse_dates=True, delimiter=delimiter,
                                   **kwargs)
                                   
-        if parse_cols:                         
+        if smart_headers:                       
             '''Smart parse columns for Parameters'''
             data_columns = self.data.columns.tolist()
             data_columns = [x.strip().lower() for x in data_columns]
-        
-            #Read json from pkg
+            
+            #Import NLTK classifier (see header_classifier.py)
             pkg_dir, filename = os.path.split(__file__)
-            json_path = os.path.join(pkg_dir, 'data', 'data_parse.json')
-            with open(json_path, 'r') as f: 
-                parse_strings = json.load(f)
-        
+            classifier_path = os.path.join(pkg_dir, 'classifier.pickle')
+            with open(classifier_path, 'r') as f: 
+                classifier = pickle.load(f)   
+                     
             #Search dict for parameter match, rename column
-            iter_dict = {'Std Dev': 1, 'Wind Speed': 1, 'Wind Direction': 1}
+            iter_dict = {'Wind Speed StDev': 1, 
+                         'Wind Speed': 1, 
+                         'Wind Direction': 1, 
+                         'TI':1}
             new_columns = []
             for x, cols in enumerate(data_columns): 
-                get_col = parse_strings.get(cols)
-                if get_col:
-                    new_col = '{0} {1}'.format(get_col, str(iter_dict[get_col]))
-                    new_columns.append(new_col)
-                    iter_dict[get_col] += 1
-                else: 
-                    print('Header parser could not parse ', cols)
-                    new_columns.append(cols)
+                get_col = classifier.classify(hclass.features(cols))
+                new_col = '{0} {1}'.format(get_col, str(iter_dict[get_col]))
+                new_columns.append(new_col)
+                iter_dict[get_col] += 1
             self.data.columns = new_columns
                                        
     def mean_ws(time_period='all'):

@@ -14,8 +14,8 @@ import nltk
 import pickle
 import os
 
-def header_features(word):
-    '''Feature extractor. Currently 0.95 accuracy'''
+def features(word):
+    '''Feature extractor. Currently 0.966 accuracy'''
     features = {}
     lowerit = word.lower()
     features['Has std'] = 'std' in lowerit
@@ -23,8 +23,9 @@ def header_features(word):
     features['Has spd'] = 's' in lowerit and 'p' in lowerit and 'd' in lowerit
     features['Has turb'] = 'turb' in lowerit
     features['Has dev'] = 'dev' in lowerit
-    features['Has WindD'] = 'windd' in lowerit
-    features['Has WD'] = 'wd' in lowerit
+    features['Has windd'] = 'windd' in lowerit
+    features['Has wd'] = 'wd' in lowerit
+    features['Has TI'] = 'TI' in word
     return features
     
 if __name__ == '__main__': 
