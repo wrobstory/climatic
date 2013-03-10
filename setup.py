@@ -12,9 +12,11 @@ classifiers = (
     'License :: OSI Approved :: MIT License',
 )
 
-requires = (
+required = (
     'matplotlib', 
     'numpy',
+    'pandas', 
+    'nltk'
 )
 
 kw = {
@@ -29,7 +31,7 @@ kw = {
     'keywords'             : 'wind data plotting',
     'classifiers'          : classifiers,
     'modules'              : ['climatic'],
-    'install_requires'     : requires, 
+    'install_requires'     : required, 
     'zip_safe'             : True,
 }
 
