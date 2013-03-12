@@ -57,6 +57,8 @@ class MetMast(object):
             Column with the timestamps
         delimiter: string, default=','
             File delimiter
+        smart_headers: boolean, default True
+            Uses NLTK text classifier to predict column headers
     
         Returns: 
         --------
