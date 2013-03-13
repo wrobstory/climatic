@@ -15,6 +15,7 @@ disclaimer
 
 import climatic as cl
 
-Mast1 = cl.MetMast(lat=-75.00, lon=100.00)
-Mast1.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
-                  delimiter=',')
+my_mast = cl.MetMast(lat=-75.00, lon=100.00)
+my_mast.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
+                    delimiter=',')
+weibull_pars=my_mast.weibull(column='Wind Speed 1')
