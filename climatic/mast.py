@@ -9,6 +9,7 @@ A straightforward met mast import class built with the pandas library
 from __future__ import print_function
 from __future__ import division
 import os
+import re
 import json
 import pickle
 import pandas as pd
@@ -128,7 +129,7 @@ class MetMast(object):
         ________
         DataFrame with hourly data distributions
         '''
-        
+      
         ws_range = np.arange(0,self.data[column].max()+ws_intervals, 
                              ws_intervals)
         binned = pd.cut(self.data[column], ws_range)
@@ -155,11 +156,10 @@ class MetMast(object):
             smooth = np.arange(0, len(data), 0.1)
             ax2.plot(smooth, rv.pdf(smooth), color='#61B100', linewidth=2.0)
             ax2.set_ylabel(r'PDF')
-            
-            
+             
         return {'Weibull A': A, 'Weibull k': k, 'Dist': dist}
             
-    def sectorwise(self, sectors=12, **kwargs):
+    def sectorwise(self, column=None, sectors=12, **kwargs):
         '''Bin the wind data sectorwise
         '''
         pass
@@ -168,11 +168,18 @@ class MetMast(object):
                    "method to load data into your object"))
         cuts = 360/sectors
         bins = [0, cuts/2]
-        bins.extend(range(cuts, 360, cuts))
+        bins.extend(np.arange(cuts*1.5, 360-cuts, cuts))
         bins.extend([360-cuts/2, 360])
-        cats = pd.cut(self.data['Average Direction'], bins, right=False)
-        array = pd.value_counts(cats)
-        
+        self.data[column] = self.data[column].apply(lambda x: 0 if x==360 else x)
+        cats = pd.cut(self.data[column], bins, right=False)
+        array = pd.value_counts(cats).reindex(cats.levels).fillna(0)
+        wind_rose = pd.Series({'[{0}, {1})'.format(360-cuts/2, 0+cuts/2): 
+                               array.ix[-1] + array.ix[0]})
+        array = array.drop([array.index[0], array.index[-1]], axis=0)
+        wind_rose = wind_rose.append(array)
+        new_index = {x:y for x,y in zip(wind_rose.index, 
+                                        np.arange(0, 360, cuts))}
+        wind_rose = wind_rose.rename(new_index)
                                   
                                   
                                   

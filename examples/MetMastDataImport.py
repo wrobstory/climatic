@@ -26,5 +26,6 @@ my_mast.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
 weibull_pars=my_mast.weibull(column='Wind Speed 1', plot='matplotlib')
 
 #Reload your data without "smart columns"
-my_mast.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
-                    delimiter=',', smart_headers=False)
+my_mast_2 = cl.MetMast()
+my_mast_2.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
+                      delimiter=',', smart_headers=False)
