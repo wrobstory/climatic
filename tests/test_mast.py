@@ -51,8 +51,8 @@ class TestMast(unittest.TestCase):
                               time_col=0, delimiter=',', names=col_names)
         weib_dict = test_mast.weibull(column='Wind Speed 1')
         assert_almost_equal(dist, weib_dict['Dist'])
-        self.assertAlmostEqual(13.240272140, weib_dict['Weibull A'])
-        self.assertAlmostEqual(1.847942587, weib_dict['Weibull k'])
+        self.assertAlmostEqual(13.240, weib_dict['Weibull A'])
+        self.assertAlmostEqual(1.848, weib_dict['Weibull k'])
         
                 
 def main():

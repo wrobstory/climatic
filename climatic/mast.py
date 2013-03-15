@@ -13,6 +13,8 @@ import json
 import pickle
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as spystats
 import header_classifier as hclass
 import weibull_est as west
 
@@ -70,6 +72,7 @@ class MetMast(object):
         if time_col is None:
             raise ValueError('Please enter a value for time_col')
         
+        print('Importing data...')
         self.data = pd.read_table(path, header=header_row, index_col=time_col, 
                                   parse_dates=True, delimiter=delimiter,
                                   **kwargs)
@@ -104,7 +107,8 @@ class MetMast(object):
             for x in col_print:
                 print(x)
                                        
-    def weibull(self, column=None, ws_intervals=1, method='LeastSq'):
+    def weibull(self, column=None, ws_intervals=1, method='LeastSq', 
+                plot=None):
         '''Calculate distribution and weibull parameters
         
         Parameters:
@@ -115,6 +119,10 @@ class MetMast(object):
             Wind Speed intervals on which to bin
         method: string, default 'LeastSq'
             Weibull calculation method. 
+        plot: string, default None
+            Choose whether or not to plot your data, and what method. 
+            Currently only supporting matplotlib, but hoping to add 
+            Bokeh as that library evolves. 
             
         Returns: 
         ________
@@ -134,6 +142,20 @@ class MetMast(object):
         
         if method == 'LeastSq':
             A,k = west.least_sq(data,x)
+            A = round(A, 3)
+            k = round(k, 3)
+            rv = spystats.exponweib(1, k, scale=A, floc=0)
+            
+        if plot == 'matplotlib':
+            fig, ax1 = plt.subplots()
+            ax1.bar(x, dist['Binned: Hourly'], color='#A70043')
+            ax1.set_xlabel(r'Wind Speed [m/s]')
+            ax1.set_ylabel(r'Hours')
+            ax2 = ax1.twinx()
+            smooth = np.arange(0, len(data), 0.1)
+            ax2.plot(smooth, rv.pdf(smooth), color='#61B100', linewidth=2.0)
+            ax2.set_ylabel(r'PDF')
+            
             
         return {'Weibull A': A, 'Weibull k': k, 'Dist': dist}
             
