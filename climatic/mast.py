@@ -156,7 +156,7 @@ class MetMast(object):
              
         return {'Weibull A': A, 'Weibull k': k, 'Dist': dist}
             
-    def sectorwise(self, column=None, sectors=12, plot=None):
+    def sectorwise(self, column=None, sectors=12, plot=None, **kwargs):
         '''Bin the wind data sectorwise
         '''
         cuts = 360/sectors
@@ -179,8 +179,8 @@ class MetMast(object):
                                    index=wind_rose.index)                         
         
         if plot == 'matplotlib':
-            plottools.wind_rose(freq_frame['Frequencies'], 
-                                sectors=len(freq_frame.index))
+            plottools.wind_rose(freq_frame['Frequencies'].values, 
+                                sectors=sectors, **kwargs)
         return freq_frame
                                   
                                   

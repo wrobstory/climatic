@@ -23,7 +23,8 @@ def husl_gen():
     return husl_dark, husl_light
 
 
-def wind_rose(freqs, sectors=12, title='Wind Rose', color=None):
+def wind_rose(freqs, sectors=12, title='Wind Rose', color=None, 
+              all_ticks=False):
     '''
     Plots a wind rose using sectorwise frequencies
     
@@ -38,32 +39,38 @@ def wind_rose(freqs, sectors=12, title='Wind Rose', color=None):
         Plot title
     color: string, default None
         Plot color, from standard matplotlib color library
+    all_ticks: boolean, default False
+        Enabling this parameter will plot ticks for every sector. Otherwise, 
+        only 30 degree ticks are plotted
         
     Returns:
     ________
     Wind rose plot
     '''
     
-    #Set up binned frequencies and labels
-    freqs_pct=np.array(freqs)/100 
+    #Set up binned frequencies and labels 
     bins = 360/sectors 
     theta=np.arange(0, 360, bins) 
     theta_rad = theta*math.pi/180
-    ticklabs = [str(x) for x in theta]     
+    if all_ticks:
+        ticklabs = [str(x) for x in theta] 
+        ticks = theta
+    else: 
+        ticklabs, ticks = np.arange(0, 360, 30), np.arange(0, 360, 30)
     
     #Plot, with N correctly oriented
     fig = plt.figure(figsize=(8,8))
     ax=fig.add_axes([0.1, 0.1, 0.8, 0.8], polar=True)     
     ax.set_theta_zero_location('N')
     ax.set_theta_direction(-1) 
-    ax.set_thetagrids(theta, labels=ticklabs)
+    ax.set_thetagrids(ticks, labels=ticklabs)
     ax.set_title(title)
     ax.grid(True, 'major', color='w', linestyle='-', linewidth=0.7)
     ax.patch.set_facecolor('0.90')
     ax.set_axisbelow(True)
-    width = 30*math.pi/180
+    width = bins*math.pi/180
     adj_theta = theta_rad-width/2
-    stylers.rbar(ax, adj_theta, freqs_pct, width=width, bottom=0.0, alpha=0.7, 
+    stylers.rbar(ax, adj_theta, freqs, width=width, bottom=0.0, alpha=0.7, 
                  color=color)
                             
 def weibull(x, dist, binned_x=None, binned_data=None):
