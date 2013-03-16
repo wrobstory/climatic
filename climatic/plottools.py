@@ -48,7 +48,8 @@ def wind_rose(freqs, sectors=12, title='Wind Rose'):
     adj_theta = theta_rad-width/2
     bars = ax.bar(adj_theta, freqs_pct, width=width, bottom=0.0)
     for bar in bars:
-        bar.set_alpha(0.6)    
+        bar.set_alpha(0.7)  
+        bar.set_facecolor('#378287')  
     plt.show()
     
     

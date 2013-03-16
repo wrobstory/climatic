@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import scipy.stats as spystats
 import header_classifier as hclass
 import weibull_est as west
+import stylers
 
 class MetMast(object): 
     '''Subclass of the pandas dataframe built to import and quickly analyze
@@ -149,28 +150,28 @@ class MetMast(object):
             
         if plot == 'matplotlib':
             fig, ax1 = plt.subplots()
-            ax1.bar(x, dist['Binned: Hourly'], color='#A70043')
-            ax1.set_xlabel(r'Wind Speed [m/s]')
-            ax1.set_ylabel(r'Hours')
+            stylers.rbar(ax1, x, dist['Binned: Hourly'].values)
+            stylers.rstyle(ax1)
+            ax1.set_xlabel(r'Wind Speed [m/s]', fontsize=12)
+            ax1.set_ylabel(r'Hours', fontsize=12)
             ax2 = ax1.twinx()
-            smooth = np.arange(0, len(data), 0.1)
-            ax2.plot(smooth, rv.pdf(smooth), color='#61B100', linewidth=2.0)
-            ax2.set_ylabel(r'PDF')
+            smooth = np.arange(0, 100, 0.1)
+            ax2.fill(smooth, rv.pdf(smooth), color='#2c674c', linewidth=2.0, 
+                     facecolor='#3b8463', alpha=0.2)
+            ax2.set_xlim((0, 40)) 
+            ax2.set_ylabel(r'PDF', fontsize=12)
              
         return {'Weibull A': A, 'Weibull k': k, 'Dist': dist}
             
     def sectorwise(self, column=None, sectors=12, **kwargs):
         '''Bin the wind data sectorwise
         '''
-        pass
-        if not self.data:
-            print(("You have not imported any data. Use the 'wind_import'"
-                   "method to load data into your object"))
         cuts = 360/sectors
         bins = [0, cuts/2]
         bins.extend(np.arange(cuts*1.5, 360-cuts, cuts))
         bins.extend([360-cuts/2, 360])
-        self.data[column] = self.data[column].apply(lambda x: 0 if x==360 else x)
+        zeroed = lambda x: 0 if x==360 else x
+        self.data[column] = self.data[column].apply(zeroed)
         cats = pd.cut(self.data[column], bins, right=False)
         array = pd.value_counts(cats).reindex(cats.levels).fillna(0)
         wind_rose = pd.Series({'[{0}, {1})'.format(360-cuts/2, 0+cuts/2): 
@@ -180,6 +181,7 @@ class MetMast(object):
         new_index = {x:y for x,y in zip(wind_rose.index, 
                                         np.arange(0, 360, cuts))}
         wind_rose = wind_rose.rename(new_index)
+        return wind_rose
                                   
                                   
                                   
