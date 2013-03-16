@@ -29,3 +29,9 @@ weibull_pars=my_mast.weibull(column='Wind Speed 1', plot='matplotlib')
 my_mast_2 = cl.MetMast()
 my_mast_2.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
                       delimiter=',', smart_headers=False)
+                      
+#Calculate and plot weibull parameters
+weibull = my_mast.weibull(column='Wind Speed 1', plot='matplotlib')
+
+#Calculate and plot sectorwise wind direction frequencies
+wind_rose = my_mast.sectorwise(column='Wind Direction 1', plot='matplotlib')

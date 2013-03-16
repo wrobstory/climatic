@@ -10,14 +10,14 @@ from pylab import *
 import pdb
 
 def rstyle(ax): 
-    """Styles an axes to appear like ggplot2
+    """Styles x,y axes to appear like ggplot2
     Must be called after all plot and axis manipulation operations have been 
     carried out (needs to know final tick spacing)
     """
     #set the style of the major and minor grid lines, filled blocks
     ax.grid(True, 'major', color='w', linestyle='-', linewidth=1.4)
     ax.grid(True, 'minor', color='0.99', linestyle='-', linewidth=0.7)
-    ax.patch.set_facecolor('0.94')
+    ax.patch.set_facecolor('0.90')
     ax.set_axisbelow(True)
     
     #set minor tick spacing to 1/2 of the major ticks
@@ -48,18 +48,17 @@ def rstyle(ax):
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_ticks_position('left')
     
-    
     if ax.legend_ <> None:
         lg = ax.legend_
         lg.get_frame().set_linewidth(0)
         lg.get_frame().set_alpha(0.5)
         
 def rbar(ax, left, height, **keywords):
-    """Creates a histogram with default style parameters to look like ggplot2
-    Is equivalent to calling ax.hist and accepts the same keyword parameters.
+    """Creates a bar plot with default style parameters to look like ggplot2
+    Is equivalent to calling ax.bar and accepts the same keyword parameters.
     If style parameters are explicitly defined, they will not be overwritten
     """
-    defaults = {'facecolor' : '0.3',
+    defaults = {'facecolor' : '0.15',
                 'edgecolor' : '0.28',
                 'linewidth' : 1, 
                 'width': 1}

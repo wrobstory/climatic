@@ -16,7 +16,8 @@ required = (
     'matplotlib', 
     'numpy',
     'pandas', 
-    'nltk'
+    'nltk',
+    'husl'
 )
 
 kw = {

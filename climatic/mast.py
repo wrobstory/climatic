@@ -19,6 +19,7 @@ import scipy.stats as spystats
 import header_classifier as hclass
 import weibull_est as west
 import stylers
+import plottools
 
 class MetMast(object): 
     '''Subclass of the pandas dataframe built to import and quickly analyze
@@ -149,21 +150,13 @@ class MetMast(object):
             rv = spystats.exponweib(1, k, scale=A, floc=0)
             
         if plot == 'matplotlib':
-            fig, ax1 = plt.subplots()
-            stylers.rbar(ax1, x, dist['Binned: Hourly'].values)
-            stylers.rstyle(ax1)
-            ax1.set_xlabel(r'Wind Speed [m/s]', fontsize=12)
-            ax1.set_ylabel(r'Hours', fontsize=12)
-            ax2 = ax1.twinx()
             smooth = np.arange(0, 100, 0.1)
-            ax2.fill(smooth, rv.pdf(smooth), color='#2c674c', linewidth=2.0, 
-                     facecolor='#3b8463', alpha=0.2)
-            ax2.set_xlim((0, 40)) 
-            ax2.set_ylabel(r'PDF', fontsize=12)
+            plottools.weibull(smooth, rv.pdf(smooth),
+                              binned_x=x, binned_data=dist['Binned: Hourly'])
              
         return {'Weibull A': A, 'Weibull k': k, 'Dist': dist}
             
-    def sectorwise(self, column=None, sectors=12, **kwargs):
+    def sectorwise(self, column=None, sectors=12, plot=None):
         '''Bin the wind data sectorwise
         '''
         cuts = 360/sectors
@@ -181,7 +174,14 @@ class MetMast(object):
         new_index = {x:y for x,y in zip(wind_rose.index, 
                                         np.arange(0, 360, cuts))}
         wind_rose = wind_rose.rename(new_index)
-        return wind_rose
+        freq_frame = pd.DataFrame({'Counts': wind_rose, 
+                                   'Frequencies': wind_rose/wind_rose.sum()},
+                                   index=wind_rose.index)                         
+        
+        if plot == 'matplotlib':
+            plottools.wind_rose(freq_frame['Frequencies'], 
+                                sectors=len(freq_frame.index))
+        return freq_frame
                                   
                                   
                                   
