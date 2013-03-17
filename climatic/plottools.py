@@ -107,13 +107,10 @@ def weibull(x, dist, binned_x=None, binned_data=None):
     else: 
         pdfax = ax1
 
-    #Get colors from husl
-    husl_dark, husl_light = husl_gen()
-    pdfax.fill(x, dist, color=husl_dark, linewidth=2.0, 
-               facecolor=husl_light, alpha=0.2)
+    pdfax.set_xlim((0, 40)) 
+    stylers.rfill(pdfax, x, dist)
     if not ax2: 
         stylers.rstyle(pdfax)
-    pdfax.set_xlim((0, 40)) 
     pdfax.set_ylabel(r'PDF', fontsize=12)
 
 

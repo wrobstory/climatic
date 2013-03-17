@@ -3,7 +3,8 @@
 MetMast
 -------
 
-A straightforward met mast import class built with the pandas library
+A straightforward met mast import and analysis class built 
+with the pandas library
 
 '''
 from __future__ import print_function
