@@ -111,7 +111,7 @@ class MetMast(object):
             for x in col_print:
                 print(x)
                                        
-    def weibull(self, column=None, ws_intervals=1, method='LeastSq', 
+    def weibull(self, column=None, ws_intervals=1, method='EuroAtlas', 
                 plot=None):
         '''Calculate distribution and weibull parameters
         
@@ -132,23 +132,28 @@ class MetMast(object):
         ________
         DataFrame with hourly data distributions
         '''
-      
-        ws_range = np.arange(0,self.data[column].max()+ws_intervals, 
+        
+        
+        ws_data = self.data[column]
+        ws_range = np.arange(0, ws_data.max()+ws_intervals, 
                              ws_intervals)
-        binned = pd.cut(self.data[column], ws_range)
+        binned = pd.cut(ws_data, ws_range)
         dist_10min = pd.value_counts(binned).reindex(binned.levels)
         dist = pd.DataFrame({'Binned: 10Min': dist_10min})
         dist['Binned: Hourly'] = dist['Binned: 10Min']/6
         dist = dist.fillna(0)
         normed = dist['Binned: 10Min']/dist['Binned: 10Min'].sum()
-        data = normed.values
-        x = np.arange(0, len(data), ws_intervals)
+        ws_normed = normed.values
+        x = np.arange(0, len(ws_normed), ws_intervals)
         
-        if method == 'LeastSq':
-            A,k = west.least_sq(data,x)
-            A = round(A, 3)
-            k = round(k, 3)
-            rv = spystats.exponweib(1, k, scale=A, floc=0)
+        if method == 'EuroAtlas':
+            A,k = west.euro_atlas(ws_data)
+        elif method == 'LeastSq':
+            A,k = west.least_sq(ws_normed,x)
+            
+        A = round(A, 3)
+        k = round(k, 3)
+        rv = spystats.exponweib(1, k, scale=A, floc=0)
             
         if plot == 'matplotlib':
             smooth = np.arange(0, 100, 0.1)
