@@ -7,12 +7,12 @@ A micro toolbox of wind data plotting tools with matplotlib
 
 '''
 from __future__ import division
-import math 
-import random
+import math
 import matplotlib.pyplot as plt
 import numpy as np
 import stylers
 import husl
+
 
 def husl_gen():
     '''Generate random set of HUSL colors, one dark, one light'''
@@ -23,11 +23,11 @@ def husl_gen():
     return husl_dark, husl_light
 
 
-def wind_rose(freqs, sectors=12, title='Wind Rose', color=None, 
+def wind_rose(freqs, sectors=12, title='Wind Rose', color=None,
               all_ticks=False):
     '''
     Plots a wind rose using sectorwise frequencies
-    
+
     Parameters:
     ___________
     freqs: numpy array, list, or pandas series of float or int
@@ -40,29 +40,29 @@ def wind_rose(freqs, sectors=12, title='Wind Rose', color=None,
     color: string, default None
         Plot color, from standard matplotlib color library
     all_ticks: boolean, default False
-        Enabling this parameter will plot ticks for every sector. Otherwise, 
+        Enabling this parameter will plot ticks for every sector. Otherwise,
         only 30 degree ticks are plotted
-        
+
     Returns:
     ________
     Wind rose plot
     '''
-    
-    #Set up binned frequencies and labels 
-    bins = 360/sectors 
-    theta=np.arange(0, 360, bins) 
+
+    #Set up binned frequencies and labels
+    bins = 360/sectors
+    theta = np.arange(0, 360, bins)
     theta_rad = theta*math.pi/180
     if all_ticks:
-        ticklabs = [str(x) for x in theta] 
+        ticklabs = [str(x) for x in theta]
         ticks = theta
-    else: 
+    else:
         ticklabs, ticks = np.arange(0, 360, 30), np.arange(0, 360, 30)
-    
+
     #Plot, with N correctly oriented
-    fig = plt.figure(figsize=(8,8))
-    ax=fig.add_axes([0.1, 0.1, 0.8, 0.8], polar=True)     
+    fig = plt.figure(figsize=(8, 8))
+    ax = fig.add_axes([0.1, 0.1, 0.8, 0.8], polar=True)
     ax.set_theta_zero_location('N')
-    ax.set_theta_direction(-1) 
+    ax.set_theta_direction(-1)
     ax.set_thetagrids(ticks, labels=ticklabs)
     ax.set_title(title)
     ax.grid(True, 'major', color='w', linestyle='-', linewidth=0.7)
@@ -70,13 +70,14 @@ def wind_rose(freqs, sectors=12, title='Wind Rose', color=None,
     ax.set_axisbelow(True)
     width = bins*math.pi/180
     adj_theta = theta_rad-width/2
-    stylers.rbar(ax, adj_theta, freqs, width=width, bottom=0.0, alpha=0.7, 
+    stylers.rbar(ax, adj_theta, freqs, width=width, bottom=0.0, alpha=0.7,
                  color=color)
-                            
+
+
 def weibull(x, dist, binned_x=None, binned_data=None):
     '''
     Plots a weibull distribution, both the pdf and binned values
-    
+
     Parameters:
     ___________
     x: array of float or int
@@ -87,43 +88,28 @@ def weibull(x, dist, binned_x=None, binned_data=None):
         x-axis array for binned data, optional
     binned_data: array of float or int, default none
         binned data, to plot over pdf
-    
+
     Returns:
     ________
     Plot of weibull distribution
     '''
-    
+
     fig, ax1 = plt.subplots()
-    
+
     if len(binned_x) > 0:
         stylers.rbar(ax1, binned_x, binned_data)
         stylers.rstyle(ax1)
         ax1.set_xlabel(r'Wind Speed [m/s]', fontsize=12)
         ax1.set_ylabel(r'Hours', fontsize=12)
         ax2 = ax1.twinx()
-        
-    if ax2: 
+
+    if ax2:
         pdfax = ax2
-    else: 
+    else:
         pdfax = ax1
 
-    pdfax.set_xlim((0, 40)) 
+    pdfax.set_xlim((0, 40))
     stylers.rfill(pdfax, x, dist)
-    if not ax2: 
+    if not ax2:
         stylers.rstyle(pdfax)
     pdfax.set_ylabel(r'PDF', fontsize=12)
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
