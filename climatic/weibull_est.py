@@ -53,8 +53,8 @@ def euro_atlas(ws_data):
         return np.exp(-(ws_mean/(a3/gamma(1+3/x))**(1/3))**x)-prob
         
     #Solve for k
-    soln = spyopt.root(k_eq, x0=[2], args=(ws_data.mean(), a3, prob_exceed))
-    k = soln.x[0]
+    soln = spyopt.fsolve(k_eq, x0=[2], args=(ws_data.mean(), a3, prob_exceed))
+    k = soln[0]
     
     #Solve for A
     A = (a3/gamma(1+3/k))**(1/3)
