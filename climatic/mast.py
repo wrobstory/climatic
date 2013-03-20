@@ -76,7 +76,7 @@ class MetMast(object):
         print('Importing data...')
         self.data = pd.read_table(path, header=header_row, index_col=time_col,
                                   parse_dates=True, delimiter=delimiter,
-                                  **kwargs)
+                                  names=columns, **kwargs)
 
         if smart_headers:
             '''Smart parse columns for Parameters'''
