@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 '''
-MetMast Example: Loading data into a Met Mast object. 
+MetMast Example: Loading data into a Met Mast object.
 
 This data and software ("Data") is provided by the National Renewable Energy
 Laboratory ("NREL"), which is operated by the Alliance for Sustainable Energy,
 LLC ("ALLIANCE") for the U.S. Department of Energy ("DOE"). The data can be
-downloaded from the following location: 
+downloaded from the following location:
 http://www.windpoweringamerica.gov/anemometerloans/projects.asp
 
 Please see LICENSE.txt in the Examples folder for the data use
@@ -26,7 +26,7 @@ my_mast.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
 my_mast_2 = cl.MetMast()
 my_mast_2.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
                       delimiter=',', smart_headers=False)
-                      
+
 #Calculate and plot weibull parameters
 weibull = my_mast.weibull(column='Wind Speed 1', plot='matplotlib')
 
