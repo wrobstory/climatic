@@ -79,5 +79,3 @@ class TestMast():
         
         assert sectors12['Counts'].sum() == counts
         assert sectors12['Frequencies'].sum() == 1
-        assert sectors12.index.tolist() == np.arange(0, 360, 30)
-        assert sectors36.index.tolist() == np.arange(0, 360, 10)

@@ -47,7 +47,7 @@ class MetMast(object):
         self.time_zone = time_zone
 
     def wind_import(self, path, columns=None, header_row=None, time_col=None,
-                    delimiter=',', smart_headers=True, **kwargs):
+                    delimiter=',', smart_headers=False, **kwargs):
         '''Wind data import. This is a very thin wrapper on the pandas
         read_table method, with the option to pass keyword arguments to
         pandas read_table if needed.
@@ -56,13 +56,15 @@ class MetMast(object):
         ----------
         path: string
             Path to file to be read
+        columns: tuple,
+            Column headers need to be of the form ('Signal', 'Height')
         header_row: int
             Row containing columns headers
         time_col: int
             Column with the timestamps
         delimiter: string, default=','
             File delimiter
-        smart_headers: boolean, default True
+        smart_headers: boolean, default False
             Uses NLTK text classifier to predict column headers
 
         Returns:
@@ -77,9 +79,14 @@ class MetMast(object):
         self.data = pd.read_table(path, header=header_row, index_col=time_col,
                                   parse_dates=True, delimiter=delimiter,
                                   names=columns, **kwargs)
+                                  
+        #if columns: 
+            #swp_cols = pd.MultiIndex.from_tuples([(x, y) for y, x in columns])
+            #self._multidata = pd.DataFrame(self.data, columns=swp_cols)
 
         if smart_headers:
             '''Smart parse columns for Parameters'''
+            
             data_columns = self.data.columns.tolist()
             data_columns = [x.strip().lower() for x in data_columns]
 
@@ -184,3 +191,14 @@ class MetMast(object):
             plottools.wind_rose(freq_frame['Frequencies'].values,
                                 sectors=sectors, **kwargs)
         return freq_frame
+        
+    def wind_shear(self):
+        '''Calculate the wind shear across all met mast heights'''
+        
+        pass 
+        
+        shear_dict = {}
+        heights = self._multidata.columns.levels[0].tolist()
+        for x in heights:
+            filtered = self._multidata.filter(regex='Mean')
+            shear_dict.setdefault(x, filtered)
