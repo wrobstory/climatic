@@ -8,10 +8,10 @@ weibull_hourly: estimate the annual hours in each wind speed bin based on
 
 '''
 
-import climatic as cl
+from climatic import toolbox
 
 #Using weibull A
-hour_distribution = cl.toolbox.weibull_hourly(2.0, A=9.0)
+hour_distribution1 = toolbox.weibull_hourly(2.0, A=9.0)
 
 #Using weibull k
-hour_distribution = cl.toolbox.weibull_hourly(2.0, Vmean=8.0)
+hour_distribution2 = toolbox.weibull_hourly(2.0, Vmean=8.0)
