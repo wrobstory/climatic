@@ -18,7 +18,6 @@ import scipy.stats as spystats
 import header_classifier as hclass
 import weibull_est as west
 import plottools
-import pdb
 
 
 class MetMast(object):
@@ -81,14 +80,14 @@ class MetMast(object):
         self.data = pd.read_table(path, header=header_row, index_col=time_col,
                                   parse_dates=True, delimiter=delimiter,
                                   names=columns, **kwargs)
-                                  
-        if columns: 
+
+        if columns:
             swp_cols = pd.MultiIndex.from_tuples([(x, y) for y, x in columns])
             self._multidata = pd.DataFrame(self.data, columns=swp_cols)
 
         if smart_headers:
             '''Smart parse columns for Parameters'''
-            
+
             data_columns = self.data.columns.tolist()
             data_columns = [x.strip().lower() for x in data_columns]
 
@@ -106,16 +105,16 @@ class MetMast(object):
             new_columns = []
             for x, cols in enumerate(data_columns):
                 get_col = classifier.classify(hclass.features(cols))
-                get_height = re.search(r'([0-9.]+\s*m) | ([0-9.]+\s*ft)', 
+                get_height = re.search(r'([0-9.]+\s*m) | ([0-9.]+\s*ft)',
                                        cols)
-                if get_height: 
+                if get_height:
                     height = float(re.split(r'm | ft', get_height.group())[0])
-                elif self.height: 
+                elif self.height:
                     print(('Smart Headers could not find a height in the '
                            'header string. Defaulting to met mast "height" '
                            'attribute'))
                     height = self.height
-                else: 
+                else:
                     print(('Smart headers could not find a height.'
                            ' Defaulting to integers.'))
                     height = iter_dict[get_col]
@@ -179,46 +178,7 @@ class MetMast(object):
                               binned_x=x, binned_data=dist['Binned: Hourly'])
 
         return {'Weibull A': A, 'Weibull k': k, 'Dist': dist}
-        
-    def weibull_hourly(self, k, A=None, Vmean=None, plot='matplotlib'): 
-        '''Calculate weibull distribution and annual hours from A, k, or 
-        Vmean parameters
-        
-        Parameters:
-        ----------
-        k: float, int
-            Weibull k parameters
-        A: float, int
-            Weibull A parameter
-        Vmean: float, int
-            Mean wind speed, for calculating weibull with Vmean and k only
-        plot: string, default 'matplotlib'
-            Choose whether or not to plot your data, and what method.
-            Currently only supporting matplotlib, but hoping to add
-            Bokeh as that library evolves.
-        '''
 
-        pdb.set_trace()
-        if Vmean: 
-            pass
-        R = spystats.exponweib.rvs(1, k, scale=A, floc=0, size=30000)
-        rv = spystats.exponweib(1, k, scale=A, floc=0)
-        weib_frame = pd.DataFrame({'Simulated Data': R})
-        bins = np.arange(0, 40, 1)
-        hour_cut = pd.cut(weib_frame['Simulated Data'], bins, right=False)
-        binned_frame = pd.value_counts(hour_cut).reindex(hour_cut.levels)
-        hours = binned_frame/binned_frame.sum()*8760
-        hours = hours.fillna(0)
-        df_hourly = pd.DataFrame({'Annual Hours': hours, 
-                                  'Normalized': hours/hours.sum()}, 
-                                 index=hours.index)
-        bot_bins = np.arange(0, 39, 1)
-        cont_bins = np.arange(0, 100, 0.1)
-        if plot == 'matplotlib': 
-            plottools.weibull(cont_bins, rv.pdf(cont_bins), binned=True, 
-                              binned_x=bot_bins, binned_data=hours)
-        return df_hourly
-        
     def sectorwise(self, column=None, sectors=12, plot=None, **kwargs):
         '''Bin the wind data sectorwise
         '''
@@ -245,12 +205,12 @@ class MetMast(object):
             plottools.wind_rose(freq_frame['Frequencies'].values,
                                 sectors=sectors, **kwargs)
         return freq_frame
-        
+
     def wind_shear(self):
         '''Calculate the wind shear across all met mast heights'''
-        
-        pass 
-        
+
+        pass
+
         shear_dict = {}
         heights = self._multidata.columns.levels[0].tolist()
         for x in heights:
