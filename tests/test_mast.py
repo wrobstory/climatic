@@ -16,14 +16,15 @@ class TestMast():
         climatic and with pandas'''
         self.simple_mast = cl.MetMast(lat=45.5236, lon=122.6750, height=80,
                                       time_zone='US/Eastern')
-        col_names = [('Wind Speed 1 Mean', 50) ,
+        col_names = [('Wind Speed 1 Mean', 50),
                      ('Wind Speed Std Dev 1', 50),
                      ('Wind Direction 1', 50),
                      ('Wind Speed 2 Mean', 40),
                      ('Wind Speed St Dev 2', 40),
                      ('Wind Speed Direction 2', 40)]
         pkg_dir, filename = os.path.split(os.path.abspath(__file__))
-        self.simple_import = os.path.join(pkg_dir, r'data/test_data_import.csv')
+        self.simple_import = os.path.join(pkg_dir,
+                                          r'data/test_data_import.csv')
         self.simple_pd = pd.read_table(self.simple_import, header=0,
                                        index_col=0, delimiter=',',
                                        names=col_names)
@@ -32,7 +33,7 @@ class TestMast():
 
         #Set up the USDOE Beresford data for testing
         self.beresford = cl.MetMast()
-        col_names = [('Wind Speed 1', 66), ('Std Dev 1', 66), 
+        col_names = [('Wind Speed 1', 66), ('Std Dev 1', 66),
                      ('Wind Direction 1', 66)]
         pkg_dir, filename = os.path.split(os.path.abspath(__file__))
         beres_import = os.path.join(pkg_dir,
@@ -57,14 +58,14 @@ class TestMast():
 
         assert_almost_equal(self.simple_pd, self.simple_mast.data)
 
-    def test_simple_import_no_cols(self): 
+    def test_simple_import_no_cols(self):
         '''Test import with no columns fed'''
         self.no_col_mast = cl.MetMast()
-        self.no_col_mast.wind_import(self.simple_import, header_row=0, 
+        self.no_col_mast.wind_import(self.simple_import, header_row=0,
                                      time_col=0, delimiter=',')
         self.no_col_pd = pd.read_table(self.simple_import, header=0,
-                                      index_col=0, delimiter=',')
-        
+                                       index_col=0, delimiter=',')
+
         assert_almost_equal(self.no_col_mast.data, self.no_col_pd)
 
     def test_complex_import(self):
@@ -85,7 +86,7 @@ class TestMast():
         assert_almost_equal(dist, weib_dict['Dist'])
         nt.assert_almost_equal(13.278, weib_dict['Weibull A'])
         nt.assert_almost_equal(1.795, weib_dict['Weibull k'])
-        
+
     def test_sectorwise(self):
         '''Test the sectorwise method'''
         sectors12 = self.beresford.sectorwise(column=('Wind Direction 1', 66),
@@ -94,6 +95,6 @@ class TestMast():
                                               sectors=36)
         cnt = pd.value_counts(self.beresford.data[('Wind Direction 1', 66)])
         summed_counts = cnt.sum()
-        
+
         assert sectors12['Counts'].sum() == summed_counts
         assert sectors12['Frequencies'].sum() == 1
