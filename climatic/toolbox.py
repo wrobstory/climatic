@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 '''
 Toolbox
 -------
@@ -13,7 +13,8 @@ from scipy.special import gamma
 import plottools
 
 
-def weibull_hourly(k, A=None, Vmean=None, plot='matplotlib'):
+def weibull_hourly(k, A=None, Vmean=None, bins=np.arange(0, 41, 1), 
+                   plot='matplotlib'):
     '''Calculate weibull distribution and annual hours from A, k, or
     Vmean parameters
 
@@ -25,6 +26,8 @@ def weibull_hourly(k, A=None, Vmean=None, plot='matplotlib'):
         Weibull A parameter
     Vmean: float, int
         Mean wind speed, for calculating weibull with Vmean and k only
+    bins: array, default np.arange(0, 41, 1)
+        Wind speed bins for estimating and plotting weibull
     plot: string, default 'matplotlib'
         Choose whether or not to plot your data, and what method.
         Currently only supporting matplotlib, but hoping to add
@@ -41,7 +44,6 @@ def weibull_hourly(k, A=None, Vmean=None, plot='matplotlib'):
     rv = spystats.exponweib(1, k, scale=A, floc=0)
 
     weib_frame = pd.DataFrame({'Simulated Data': R})
-    bins = np.arange(0, 40, 1)
     hour_cut = pd.cut(weib_frame['Simulated Data'], bins, right=False)
     binned_frame = pd.value_counts(hour_cut).reindex(hour_cut.levels)
     hours = binned_frame/binned_frame.sum()*8760
@@ -49,7 +51,8 @@ def weibull_hourly(k, A=None, Vmean=None, plot='matplotlib'):
     df_hourly = pd.DataFrame({'Annual Hours': hours,
                               'Normalized': hours/hours.sum()},
                              index=hours.index)
-    bot_bins = np.arange(0, 39, 1)
+    step_size = bins[1]-bins[0]
+    bot_bins = np.arange(0, max(bins), step_size)
     cont_bins = np.arange(0, 100, 0.1)
     if plot == 'matplotlib':
         plottools.weibull(cont_bins, rv.pdf(cont_bins), binned=True,
