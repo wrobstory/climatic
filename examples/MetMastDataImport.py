@@ -16,19 +16,21 @@ disclaimer
 import climatic as cl
 
 #Create Met Mast object
-my_mast = cl.MetMast(lat=-75.00, lon=100.00)
+my_mast = cl.MetMast(lat=-75.00, lon=100.00, height=66)
 
 #Upload your wind data
 my_mast.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
-                    delimiter=',')
+                    delimiter=',', smart_headers=True)
 
 #Reload your data without "smart columns"
 my_mast_2 = cl.MetMast()
-my_mast_2.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
-                      delimiter=',', smart_headers=False)
+met_columns = [('WS Mean 1', 66), ('WD Mean 1', 66), 
+               ('WS StDev 1', 66)]
+my_mast_2.wind_import(r'USDOE_beresford_051201.csv', columns=met_columns, 
+                      header_row=54, time_col=0, delimiter=',')
 
 #Calculate and plot weibull parameters
-weibull = my_mast.weibull(column='Wind Speed 1', plot='matplotlib')
+weibull = my_mast.weibull(column=('WS Mean 1', 66), plot='matplotlib')
 
 #Calculate and plot sectorwise wind direction frequencies
-wind_rose = my_mast.sectorwise(column='Wind Direction 1', plot='matplotlib')
+wind_rose = my_mast.sectorwise(column=('WD Mean 1', 66), plot='matplotlib')

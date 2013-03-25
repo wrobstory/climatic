@@ -14,39 +14,49 @@ class TestMast():
 
         '''Set up simple import for testing with given columns, both with
         climatic and with pandas'''
-        self.simple_mast = cl.MetMast(lat=45.5236, lon=122.6750, height=80,
+        self.simple_mast = cl.MetMast(lat=45.5236, lon=122.675, height=80,
                                       time_zone='US/Eastern')
-        col_names = [('Wind Speed 1 Mean', 50),
-                     ('Wind Speed Std Dev 1', 50),
-                     ('Wind Direction 1', 50),
-                     ('Wind Speed 2 Mean', 40),
-                     ('Wind Speed St Dev 2', 40),
-                     ('Wind Speed Direction 2', 40)]
+        self.simple_cols = [('Wind Speed 1 Mean', 50),
+                            ('Wind Speed Std Dev 1', 50),
+                            ('Wind Direction 1', 50),
+                            ('Wind Speed 2 Mean', 40),
+                            ('Wind Speed St Dev 2', 40),
+                            ('Wind Speed Direction 2', 40)]
         pkg_dir, filename = os.path.split(os.path.abspath(__file__))
         self.simple_import = os.path.join(pkg_dir,
                                           r'data/test_data_import.csv')
         self.simple_pd = pd.read_table(self.simple_import, header=0,
                                        index_col=0, delimiter=',',
-                                       names=col_names)
-        self.simple_mast.wind_import(self.simple_import, columns=col_names,
+                                       names=self.simple_cols)
+        self.simple_mast.wind_import(self.simple_import, 
+                                     columns=self.simple_cols,
                                      header_row=0, time_col=0, delimiter=',')
 
         #Set up the USDOE Beresford data for testing
         self.beresford = cl.MetMast()
-        col_names = [('Wind Speed 1', 66), ('Std Dev 1', 66),
-                     ('Wind Direction 1', 66)]
+        self.beres_cols = [('Wind Speed 1', 66), ('Std Dev 1', 66),
+                           ('Wind Direction 1', 66)]
         pkg_dir, filename = os.path.split(os.path.abspath(__file__))
-        beres_import = os.path.join(pkg_dir,
-                                    r'data/USDOE_beresford_051201.csv')
-        self.beres_pd = pd.read_table(beres_import, header=57,
+        self.beres_import = os.path.join(pkg_dir,
+                                         r'data/USDOE_beresford_051201.csv')
+        self.beres_pd = pd.read_table(self.beres_import, header=57,
                                       index_col=0, delimiter=',',
-                                      names=col_names)
-        self.beresford.wind_import(beres_import, columns=col_names,
+                                      names=self.beres_cols)
+        self.beresford.wind_import(self.beres_import, columns=self.beres_cols,
                                    header_row=57, time_col=0, delimiter=',',
                                    smart_headers=False)
-
+                                   
+    def test_repr(self):
+        #Test repr method
+        
+        repr_str = ("climatic.MetMast(lat=45.5236, "
+                                     "lon=122.675, "
+                                     "height=80, "
+                                     "time_zone='US/Eastern')")
+        assert repr(self.simple_mast) == repr_str
+                                              
     def test_atts(self):
-        #Test for standard input
+        '''Test for standard input'''
 
         assert self.simple_mast.lat == 45.5236
         assert self.simple_mast.lon == 122.6750

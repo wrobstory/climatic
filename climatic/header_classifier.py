@@ -10,32 +10,67 @@ header input for the "smart_headers" method
 
 from __future__ import print_function
 import json
+import random
 import nltk
 import os
-
-
+                                                                                                  
 def features(word):
-    '''Feature extractor. Currently 0.966 accuracy'''
+    '''Feature extractor. Currently 1.0 accuracy'''
     features = {}
-    lowerit = word.lower()
-    features['Has std'] = 'std' in lowerit
-    features['Has dir'] = 'dir' in lowerit
-    features['Has spd'] = 's' in lowerit and 'p' in lowerit and 'd' in lowerit
-    features['Has turb'] = 'turb' in lowerit
-    features['Has dev'] = 'dev' in lowerit
-    features['Has windd'] = 'windd' in lowerit
-    features['Has wd'] = 'wd' in lowerit
+    lowerstrip = word.lower().replace(' ', '')
+    features['Has std'] = 'std' in lowerstrip
+    features['Has dir'] = 'dir' in lowerstrip
+    features['Has w&s'] = 'w' in lowerstrip and 's' in lowerstrip
+    features['Has speed'] = 'speed' in lowerstrip
+    features['Has turb'] = 'turb' in lowerstrip
+    features['Has dev'] = 'dev' in lowerstrip
+    features['Has windd'] = 'windd' in lowerstrip
+    features['Has wd'] = 'wd' in lowerstrip
     features['Has TI'] = 'TI' in word
+    features['Has Max'] = 'max' in lowerstrip
+    features['Has Min'] = 'min' in lowerstrip
+    features['Has temp'] = 'temp' in lowerstrip
+    features['has dens'] = 'dens' in lowerstrip
+    features['has rho'] = 'rho' in lowerstrip
+    features['has mean'] = 'mean' in lowerstrip
     return features
+    
+def combine_all(signals, descriptors):
+    '''Combine attributes (WS, Direction, etc), descriptors, and heights'''
+    combined_dict={}
+    for sig, sname in signals.iteritems():
+        for desc, dname in descriptors.iteritems():
+            sig_type = ' '.join([sig, desc])
+            combined = []
+            desc_att = [' '.join([x, y]) for x in dname for y in sname]
+            heights = [''.join([str(x), 'm']) for x in xrange(0, 121, 1)]
+            add_height = [' '.join([x, y]) for x in desc_att for y in heights]
+            final_dict = {x: sig_type for x in add_height} 
+            combined_dict.update(final_dict)
+    return combined_dict
 
 if __name__ == '__main__':
-    #Read json from pkg
-    pkg_dir, filename = os.path.split(__file__)
-    json_path = os.path.join(pkg_dir, 'data', 'header_training.json')
-    with open(json_path, 'r') as f:
-        training_dict = json.load(f)
 
-    header_tuples = [(x, y) for x, y in training_dict.iteritems()]
+    signals = {'WS': ['WS', 'WSpd', 'WSpeed', 'WndSpd', 'WndSpeed', 
+                      'WindSp', 'WindSpd', 'WindSpeed', 'Wind Speed'],
+               'TI': ['TI', 'TurbInt', 'TIntensity', 'Turb Intensity', 
+                      'Turbulence Intensity', 'Turbulence'],
+               'WD': ['WD', 'WDir', 'WDirection', 'WndDir', 
+                      'WindDirection', 'Wind Dir', 'Wnd Direction'],
+               'Rho': ['rho', 'Density', 'Air Density'],
+               'Temp': ['Air Temperature', 'Temp', 'Temperature']}
+
+    descriptors = {'Mean': ['Average', 'Avg', 'Mean'],
+                   'StdDev': ['StdDev', 'StDev', 'StandardDev',
+                              'Standard Deviation', 'Std Deviation'],
+                   'Max': ['Max', 'Maximum'],
+                   'Min': ['Min', 'Minimum']}
+ 
+    training_dict = combine_all(signals, descriptors)
+  
+    keys = training_dict.keys()
+    random.shuffle(keys)   
+    header_tuples = [(x, training_dict[x]) for x in keys]
 
     #Break into training, test, and devtest data
     train_header = header_tuples[1500:]
