@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿  # -*- coding: utf-8 -*-
 '''
 Toolbox
 -------
@@ -13,10 +13,12 @@ from scipy.special import gamma
 import plottools
 
 
-def weibull_hourly(k, A=None, Vmean=None, bins=np.arange(0, 41, 1), 
+def weibull_hourly(k=None, A=None, Vmean=None, bins=np.arange(0, 41, 1),
                    plot='matplotlib'):
-    '''Calculate weibull distribution and annual hours from A, k, or
-    Vmean parameters
+    '''Calculate weibull distribution and annual hours from weibull k and A or
+    Vmean parameters. This distribution is based on multiplying the
+    PDF by the annual hours for each wind speed bin. Defaults to Vmean for
+    calculation of A if both Vmean and A are provided.
 
     Parameters:
     ----------
@@ -40,21 +42,15 @@ def weibull_hourly(k, A=None, Vmean=None, bins=np.arange(0, 41, 1),
 
     if Vmean:
         A = Vmean/(gamma(1+1/k))
-    R = spystats.exponweib.rvs(1, k, scale=A, floc=0, size=30000)
-    rv = spystats.exponweib(1, k, scale=A, floc=0)
 
-    weib_frame = pd.DataFrame({'Simulated Data': R})
-    hour_cut = pd.cut(weib_frame['Simulated Data'], bins, right=False)
-    binned_frame = pd.value_counts(hour_cut).reindex(hour_cut.levels)
-    hours = binned_frame/binned_frame.sum()*8760
-    hours = hours.fillna(0)
-    df_hourly = pd.DataFrame({'Annual Hours': hours,
-                              'Normalized': hours/hours.sum()},
-                             index=hours.index)
     step_size = bins[1]-bins[0]
-    bot_bins = np.arange(0, max(bins), step_size)
+    rv = spystats.exponweib(1, k, scale=A, floc=0)
+    hourly = rv.pdf(bins)*8760*step_size
+    df_hourly = pd.DataFrame({'Annual Hours': hourly,
+                              'Normalized': hourly/hourly.sum()},
+                             index=bins)
     cont_bins = np.arange(0, 100, 0.1)
     if plot == 'matplotlib':
         plottools.weibull(cont_bins, rv.pdf(cont_bins), binned=True,
-                          binned_x=bot_bins, binned_data=hours)
+                          binned_x=bins, binned_data=hourly)
     return df_hourly

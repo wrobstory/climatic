@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿  # -*- coding: utf-8 -*-
 '''
 MetMast
 -------
@@ -12,7 +12,6 @@ from __future__ import division
 import os
 import re
 import pickle
-import warnings
 import pandas as pd
 import numpy as np
 import scipy.stats as spystats
@@ -47,16 +46,16 @@ class MetMast(object):
         self.lon = lon
         self.height = height
         self.time_zone = time_zone
-        
+
     def __repr__(self):
         if self.time_zone:
             zone_or_none = "'{0}'".format(self.time_zone)
         else:
             zone_or_none = None
-        return ("climatic.MetMast(lat={0}, lon={1}, height={2}, " 
-                "time_zone={3})").format(self.lat, 
-                                         self.lon, 
-                                         self.height, 
+        return ("climatic.MetMast(lat={0}, lon={1}, height={2}, "
+                "time_zone={3})").format(self.lat,
+                                         self.lon,
+                                         self.height,
                                          zone_or_none)
 
     def wind_import(self, path, columns=None, header_row=None, time_col=None,
@@ -87,7 +86,7 @@ class MetMast(object):
 
         if time_col is None:
             raise ValueError('Please enter a value for time_col')
-        
+
         if columns and smart_headers:
             print(('Warning: MetMast will default to user defined columns if '
                    'both the columns argument and smart_headers=True are '
@@ -118,7 +117,7 @@ class MetMast(object):
             iter_dict = {}
             for sigs in combine:
                 iter_dict.setdefault(sigs, 1)
-            
+
             columns = []
             for x, cols in enumerate(data_columns):
                 get_col = classifier.classify(features(cols))
@@ -145,8 +144,8 @@ class MetMast(object):
                                                           columns)]
             for x in col_print:
                 print(x)
-               
-            #Set up data as MultiIndex for height processing 
+
+            #Set up data as MultiIndex for height processing
             swp_cols = pd.MultiIndex.from_tuples([(x, y) for y, x in columns])
             self._multidata = pd.DataFrame(self.data, columns=swp_cols)
 

@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿  # -*- coding: utf-8 -*-
 '''
 Header Classifier
 -------
@@ -9,11 +9,10 @@ header input for the "smart_headers" method
 '''
 
 from __future__ import print_function
-import json
 import random
 import nltk
-import os
-                                                                                                  
+
+
 def features(word):
     '''Feature extractor. Currently 1.0 accuracy'''
     features = {}
@@ -34,28 +33,28 @@ def features(word):
     features['has rho'] = 'rho' in lowerstrip
     features['has mean'] = 'mean' in lowerstrip
     return features
-    
+
+
 def combine_all(signals, descriptors):
     '''Combine attributes (WS, Direction, etc), descriptors, and heights'''
-    combined_dict={}
+    combined_dict = {}
     for sig, sname in signals.iteritems():
         for desc, dname in descriptors.iteritems():
             sig_type = ' '.join([sig, desc])
-            combined = []
             desc_att = [' '.join([x, y]) for x in dname for y in sname]
             heights = [''.join([str(x), 'm']) for x in xrange(0, 121, 1)]
             add_height = [' '.join([x, y]) for x in desc_att for y in heights]
-            final_dict = {x: sig_type for x in add_height} 
+            final_dict = {x: sig_type for x in add_height}
             combined_dict.update(final_dict)
     return combined_dict
 
 if __name__ == '__main__':
 
-    signals = {'WS': ['WS', 'WSpd', 'WSpeed', 'WndSpd', 'WndSpeed', 
+    signals = {'WS': ['WS', 'WSpd', 'WSpeed', 'WndSpd', 'WndSpeed',
                       'WindSp', 'WindSpd', 'WindSpeed', 'Wind Speed'],
-               'TI': ['TI', 'TurbInt', 'TIntensity', 'Turb Intensity', 
+               'TI': ['TI', 'TurbInt', 'TIntensity', 'Turb Intensity',
                       'Turbulence Intensity', 'Turbulence'],
-               'WD': ['WD', 'WDir', 'WDirection', 'WndDir', 
+               'WD': ['WD', 'WDir', 'WDirection', 'WndDir',
                       'WindDirection', 'Wind Dir', 'Wnd Direction'],
                'Rho': ['rho', 'Density', 'Air Density'],
                'Temp': ['Air Temperature', 'Temp', 'Temperature']}
@@ -65,11 +64,11 @@ if __name__ == '__main__':
                               'Standard Deviation', 'Std Deviation'],
                    'Max': ['Max', 'Maximum'],
                    'Min': ['Min', 'Minimum']}
- 
+
     training_dict = combine_all(signals, descriptors)
-  
+
     keys = training_dict.keys()
-    random.shuffle(keys)   
+    random.shuffle(keys)
     header_tuples = [(x, training_dict[x]) for x in keys]
 
     #Break into training, test, and devtest data

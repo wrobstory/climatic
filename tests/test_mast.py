@@ -1,4 +1,13 @@
-﻿from __future__ import print_function
+﻿  # -*- coding: utf-8 -*-
+'''
+Test Mast
+-------
+
+Test the MetMast class with nosetests
+
+'''
+
+from __future__ import print_function
 import os
 import pandas as pd
 import numpy as np

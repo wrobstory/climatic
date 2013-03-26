@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿  # -*- coding: utf-8 -*-
 
 '''
 Climatic plotting tools
@@ -102,7 +102,8 @@ def weibull(x, dist, binned=False, binned_x=None, binned_data=None):
 
     if binned:
         bin_width = binned_x[1]-binned_x[0]
-        stylers.rbar(ax1, binned_x, binned_data, width=bin_width)
+        stylers.rbar(ax1, binned_x, binned_data, width=bin_width,
+                     align='center')
         stylers.rstyle(ax1)
         ax1.set_xlabel(r'Wind Speed [m/s]', fontsize=12)
         ax1.set_ylabel(r'Hours', fontsize=12)
