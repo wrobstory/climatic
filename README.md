@@ -12,7 +12,6 @@ library and complete with opinionated plot styling.
 
 Data Import and Manipulation
 -----------
-***
 
 ``MetMast``
     A class to import and manipulate met mast data
@@ -25,7 +24,6 @@ or the European Wind Atlas guideline
 
 Plotting Tools
 --------------
-***
 
 ``wind_rose``
     Plot a directional wind rose with as many sectors as you like.
@@ -38,8 +36,7 @@ Plotting Tools
 ![](http://farm9.staticflickr.com/8510/8594568080_1609d562f1.jpg)
 
 Toolbox
-_______
-***
+--------------
 
 ``weibull_hourly`` 
     Calculate weibull distribution and annual hours from Weibull k and A/Vmean
