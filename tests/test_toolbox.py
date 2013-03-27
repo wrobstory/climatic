@@ -9,8 +9,10 @@ Test the toolbox module with nosetests
 import pandas as pd
 import numpy as np
 import scipy.stats as spystats
+import nose.tools as nt
 from scipy.special import gamma
 from pandas.util.testing import assert_almost_equal
+
 
 from climatic import toolbox
 
@@ -19,7 +21,7 @@ class TestToolbox():
     
     def setup(self):
         bins = np.arange(0, 41, 1)
-        Vmean = 8
+        Vmean = 9
         A = 9
         k = 2
         AVmean = Vmean/(gamma(1+1/k))
@@ -38,5 +40,28 @@ class TestToolbox():
                                         index=bins)
     
     def test_weib_hourly_Ak(self):
+        '''Test A and k input'''
         self.weibull = toolbox.weibull_hourly(k=2, A=9)
+        
         assert_almost_equal(self.weibull, self.hourlyA)
+        nt.assert_almost_equal(self.weibull['Normalized'].sum(), 1)
+        
+    def test_weib_hourly_AVmean(self):
+        '''Test Vmean and k input'''
+        self.weibullv = toolbox.weibull_hourly(k=2, Vmean=9)
+        
+        assert_almost_equal(self.weibullv, self.hourlyA)
+        nt.assert_almost_equal(self.weibullv['Normalized'].sum(), 1) 
+        
+    def test_bins(self):
+        '''Test different bin sizes'''
+        bin1 = np.arange(0, 40.5, 0.5)
+        bin2 = np.arange(0, 40.1, 0.1)
+        self.halfbins = toolbox.weibull_hourly(k=2, A=9, bins=bin1)
+        self.tenthbins = toolbox.weibull_hourly(k=2, A=9, bins=bin2)
+        
+        nt.assert_greater_equal(8760, self.halfbins['Annual Hours'].sum())
+        nt.assert_less_equal(8755,  self.halfbins['Annual Hours'].sum())
+        nt.assert_greater_equal(8760, self.tenthbins['Annual Hours'].sum())
+        nt.assert_less_equal(8755,  self.tenthbins['Annual Hours'].sum())       
+             

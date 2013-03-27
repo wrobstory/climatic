@@ -199,8 +199,24 @@ class MetMast(object):
 
         return {'Weibull A': A, 'Weibull k': k, 'Dist': dist}
 
-    def sectorwise(self, column=None, sectors=12, plot=None, **kwargs):
+    def sectorwise(self, column=None, sectors=12, plot='matplotlib', **kwargs):
         '''Bin the wind data sectorwise
+        
+        Parameters:
+        ___________
+        column: string
+            Column to perform sectorwise analysis on
+        sectors: int, default 12
+            Number of sectors to bin
+        plot: string, default 'matplotlib'
+            Choose whether or not to plot your data, and what method.
+            Currently only supporting matplotlib, but hoping to add
+            Bokeh as that library evolves.
+
+        Returns:
+        ________
+        DataFrame with sectorwise distribution
+        
         '''
         cuts = 360/sectors
         bins = [0, cuts/2]
