@@ -52,5 +52,5 @@ def weibull_hourly(k=None, A=None, Vmean=None, bins=np.arange(0, 41, 1),
     cont_bins = np.arange(0, 100, 0.1)
     if plot == 'matplotlib':
         plottools.weibull(cont_bins, rv.pdf(cont_bins), binned=True,
-                          binned_x=bins, binned_data=hourly)
+                          binned_x=bins, binned_data=hourly, align='center')
     return df_hourly

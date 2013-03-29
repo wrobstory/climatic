@@ -12,6 +12,7 @@ from __future__ import division
 import os
 import re
 import pickle
+from collections import Counter
 import pandas as pd
 import numpy as np
 import scipy.stats as spystats
@@ -174,7 +175,7 @@ class MetMast(object):
 
         Parameters:
         ___________
-        column: string
+        column: tuple, default None
             Column to perform weibull analysis on
         ws_intervals: float, default=1
             Wind Speed intervals on which to bin
@@ -214,16 +215,17 @@ class MetMast(object):
         if plot == 'matplotlib':
             smooth = np.arange(0, 100, 0.1)
             plottools.weibull(smooth, rv.pdf(smooth), binned=True,
-                              binned_x=x, binned_data=dist['Binned: Hourly'])
+                              binned_x=x, binned_data=dist['Binned: Hourly'],
+                              align='edge')
 
         return {'Weibull A': A, 'Weibull k': k, 'Dist': dist}
 
     def sectorwise(self, column=None, sectors=12, plot='matplotlib', **kwargs):
-        '''Bin the wind data sectorwise
+        '''Bin and plot the data sectorwise
         
         Parameters:
         ___________
-        column: string
+        column: tuple, default None
             Column to perform sectorwise analysis on
         sectors: int, default 12
             Number of sectors to bin
@@ -274,4 +276,71 @@ class MetMast(object):
             
     def data_overlap(self):
         '''Check for duplicated timestamps'''
-        return 'Timestamps are unique: {0}'.format(self.data.index.is_unique)
+        repeated = [date for date, count in \
+                     Counter(self.data.index).iteritems() if count > 1]
+        for x in repeated: 
+            print('The timestamp {0} repeats in this dataset.'.format(x))
+        return repeated
+        
+    def binned(self, column=None, bins=None, stat='mean', name=None, 
+               plot=None):
+        '''Bin all data based on a single column. 
+        
+        Parameters: 
+        ___________
+        column: tuple, default None
+            Column on which to bin data
+        bins: array, default None
+            List or np.array with bins
+        stat: string, default 'mean'
+            Statistic you want to perform on binned data (mean, max, etc)
+        name: string, default None
+            Attribute name for binned data. Will create a new MetMast 
+            attribute with binned data. 
+        plot: tuple, default None
+            If you are binning by direction, plot=column_name will pass the 
+            data to plottools.wind_rose
+            
+        Returns: 
+        ________
+        self.data_binned_name, DataFrame with data summed by bins/stat
+        
+        Examples:
+        _________
+        >>> mast.binned(column=('WS Mean 1', 56), bins=np.arange(0, 41, 1))
+        >>> mast.data_binned
+
+        >>> mast.binned(column=('WD Mean 1', 56), bins=np.arange(0, 375, 15), 
+                        stat='max', name='WD1_Max', plot=('WS Mean 1', 56))
+        >>> mast.data_binned_WD1_Max
+        
+        
+        '''
+        print('Mapping bins to data...')
+        def map_bin(x, bins):
+            kwargs = {}
+            if x == max(bins):
+                kwargs['right'] = True
+            bin = bins[np.digitize([x], bins, **kwargs)[0]]
+            bin_lower = bins[np.digitize([x], bins, **kwargs)[0]-1]
+            return '[{0}-{1}]'.format(bin_lower, bin)
+    
+        step = bins[1]-bins[0]
+        new_index = ['[{0}-{1}]'.format(x, x+step) for x in bins]
+        new_index.pop(-1)
+    
+        temp_df = self.data.dropna()
+        temp_df['Binned'] = temp_df[column].apply(map_bin, bins=bins)
+        grouped = temp_df.groupby('Binned')
+        grouped_stat = getattr(grouped, stat)()
+        grouped_stat = grouped_stat.reindex(new_index)
+        if name is not None: 
+            attr_name = 'data_binned_{0}'.format(name)
+        else: 
+            attr_name = 'data_binned'
+        setattr(self, attr_name, grouped_stat)
+        
+        if plot: 
+            sect = len(new_index)
+            plottools.wind_rose(grouped_stat[plot].tolist(), sectors=sect)
+            

@@ -74,7 +74,7 @@ def wind_rose(freqs, sectors=12, title='Wind Rose', color=None,
                  color=color)
 
 
-def weibull(x, dist, binned=False, binned_x=None, binned_data=None):
+def weibull(x, dist, binned=False, binned_x=None, binned_data=None, **kwargs):
     '''
     Plots a weibull distribution, both the pdf and binned values
 
@@ -102,8 +102,7 @@ def weibull(x, dist, binned=False, binned_x=None, binned_data=None):
 
     if binned:
         bin_width = binned_x[1]-binned_x[0]
-        stylers.rbar(ax1, binned_x, binned_data, width=bin_width,
-                     align='center')
+        stylers.rbar(ax1, binned_x, binned_data, width=bin_width, **kwargs)
         stylers.rstyle(ax1)
         ax1.set_xlabel(r'Wind Speed [m/s]', fontsize=12)
         ax1.set_ylabel(r'Hours', fontsize=12)
@@ -115,7 +114,7 @@ def weibull(x, dist, binned=False, binned_x=None, binned_data=None):
         pdfax = ax1
 
     pdfax.set_xlim((0, 40))
-    stylers.rfill(pdfax, x, dist)
+    stylers.rfill(pdfax, x, dist,)
     if not ax2:
         stylers.rstyle(pdfax)
     pdfax.set_ylabel(r'PDF', fontsize=12)

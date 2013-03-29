@@ -30,7 +30,8 @@ class TestMast():
                             ('Wind Direction 1', 50),
                             ('Wind Speed 2 Mean', 40),
                             ('Wind Speed St Dev 2', 40),
-                            ('Wind Speed Direction 2', 40)]
+                            ('Wind Speed Direction 2', 40), 
+                            ('Binned Direction 1', 40)]
         pkg_dir, filename = os.path.split(os.path.abspath(__file__))
         self.simple_import = os.path.join(pkg_dir,
                                           r'data/test_data_import.csv')
@@ -117,3 +118,43 @@ class TestMast():
 
         assert sectors12['Counts'].sum() == summed_counts
         assert sectors12['Frequencies'].sum() == 1
+        
+    def test_dup_timestamps(self):
+        '''Test timestamp duplicator check'''
+        
+        stamp = pd.Timestamp('2005/12/01 18:10:00')
+        assert self.simple_mast.data_overlap()[0] == stamp
+        
+    def test_binned(self):
+        '''Test binning functionality'''
+        
+        ws_bins = np.arange(0, 41, 1)
+        wd_bins = np.arange(0, 375, 15)
+        
+        def makeindex(bins):
+            step = bins[1]-bins[0]
+            new_index = ['[{0}-{1}]'.format(x, x+step) for x in bins]
+            new_index.pop(-1)
+            return new_index
+        
+        ws_index = makeindex(ws_bins)
+        wd_index = makeindex(wd_bins)
+        self.simple_mast.binned(column=('Wind Speed 1 Mean', 50), bins=ws_bins, 
+                                stat='max', name='WS1Max')
+        self.simple_mast.binned(column=('Wind Direction 1', 50), bins=wd_bins, 
+                                stat='mean', name='WDMean')
+                                
+        grouped = self.simple_mast.data.groupby([('Binned Direction 1', 40)])  
+        test_mean = grouped.mean().reindex(wd_index)
+                                
+        assert hasattr(self.simple_mast, 'data_binned_WS1Max')
+        assert len(self.simple_mast.data_binned_WS1Max) == len(ws_bins)-1
+        for x in self.simple_mast.data_binned_WS1Max.iteritems():
+            assert x[1].max() == self.simple_mast.data[x[0]].max()
+            
+        assert_almost_equal(self.simple_mast.data_binned_WDMean.dropna(), 
+                            test_mean.dropna())        
+        
+                                
+        
+        
