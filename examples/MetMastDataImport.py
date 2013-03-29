@@ -36,3 +36,11 @@ weibull = my_mast.weibull(column=('WS Mean 1', 20), plot='matplotlib')
 
 #Calculate and plot sectorwise wind direction frequencies
 wind_rose = my_mast.sectorwise(column=('WD Mean 1', 20), plot='matplotlib')
+
+#Bin data by wind speed
+my_mast.binned(column=('WS Mean 1', 20), bins=np.arange(0, 41, 1))
+
+#Bin data max by wind direction, create frequency plot of WS
+my_mast.binned(column=('WD Mean 1', 20), bins=np.arange(0, 375, 15), 
+               stat='max', name='WD1_Max', plot=('WS Mean 1', 20))
+
