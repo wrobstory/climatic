@@ -9,14 +9,16 @@ downloaded from the following location:
 http://www.windpoweringamerica.gov/anemometerloans/projects.asp
 
 Please see LICENSE.txt in the Examples folder for the data use
-disclaimer
+disclaimer.
 
+The USDOE examples are measured in mph, but until better (free) met data 
+can be acquired, we're going to treat them as m/s
 '''
 
 import climatic as cl
 
 #Create Met Mast object
-my_mast = cl.MetMast(lat=-75.00, lon=100.00, height=66)
+my_mast = cl.MetMast(lat=46.9083, lon=109.808, height=20)
 
 #Upload your wind data
 my_mast.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
@@ -24,13 +26,13 @@ my_mast.wind_import(r'USDOE_beresford_051201.csv', header_row=54, time_col=0,
 
 #Reload your data without "smart columns"
 my_mast_2 = cl.MetMast()
-met_columns = [('WS Mean 1', 66), ('WD Mean 1', 66), 
-               ('WS StDev 1', 66)]
+met_columns = [('WS Mean 1', 20), ('WD Mean 1', 20), 
+               ('WS StDev 1', 20)]
 my_mast_2.wind_import(r'USDOE_beresford_051201.csv', columns=met_columns, 
                       header_row=54, time_col=0, delimiter=',')
 
 #Calculate and plot weibull parameters
-weibull = my_mast.weibull(column=('WS Mean 1', 66), plot='matplotlib')
+weibull = my_mast.weibull(column=('WS Mean 1', 20), plot='matplotlib')
 
 #Calculate and plot sectorwise wind direction frequencies
-wind_rose = my_mast.sectorwise(column=('WD Mean 1', 66), plot='matplotlib')
+wind_rose = my_mast.sectorwise(column=('WD Mean 1', 20), plot='matplotlib')

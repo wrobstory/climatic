@@ -96,7 +96,26 @@ class MetMast(object):
         self.data = pd.read_table(path, header=header_row, index_col=time_col,
                                   parse_dates=True, delimiter=delimiter,
                                   names=columns, **kwargs)
-
+          
+                                  
+        if not isinstance(self.data.index, pd.DatetimeIndex):
+            try: 
+                self.data.index = self.data.index.to_datetime()
+            except ValueError: 
+                print(('Timestamp column not converting correctly. Iterating'
+                       ' through index to check timestamp validity...'))
+                for num, index in enumerate(self.data.index): 
+                    try: 
+                        pd.Timestamp(index)
+                    except ValueError: 
+                        stamps = (index, 
+                                  self.data.index[num-1], 
+                                  self.data.index[num+1])
+                        print(('Cannot parse {0}. Previous timestamp is {1}. ' 
+                               'Next timestamp is {2}.').format(stamps[0],
+                                                                stamps[1],
+                                                                stamps[2]))
+                
         if smart_headers and not columns:
             '''Smart parse columns for Parameters'''
 
@@ -252,3 +271,7 @@ class MetMast(object):
         for x in heights:
             filtered = self._multidata.filter(regex='Mean')
             shear_dict.setdefault(x, filtered)
+            
+    def data_overlap(self):
+        '''Check for duplicated timestamps'''
+        return 'Timestamps are unique: {0}'.format(self.data.index.is_unique)
