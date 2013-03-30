@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Climatic by wrobstory</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Climatic</h1>
+        <p>A small toolbox of wind data analysis plotting tools </p>
+
+        <p class="view"><a href="https://github.com/wrobstory/climatic">View the Project on GitHub <small>wrobstory/climatic</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/wrobstory/climatic/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/wrobstory/climatic/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/wrobstory/climatic">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Climatic: Wind Data Visualization</h1>
+
+<p>A small toolbox of wind data analysis tools.</p>
+
+<h2>Concept</h2>
+
+<p>A small toolbox for analyzing and plotting wind data, built on top of the Pandas
+library and complete with opinionated plot styling. </p>
+
+<h2>Data Import and Manipulation</h2>
+
+<p><code>MetMast</code>
+    A class to import and manipulate met mast data</p>
+
+<ul>
+<li>
+<code>wind_import</code> Quickly import met mast data, with smart_headers functionality
+to intelligently parse headers </li>
+<li>
+<code>weibull</code> Calculate weibull parameters from imported data, using least squares fitting
+or the European Wind Atlas guideline</li>
+<li>
+<code>sectorwise</code> Bin data sectorwise</li>
+</ul><h2>Plotting Tools</h2>
+
+<p><code>wind_rose</code>
+    Plot a directional wind rose with as many sectors as you like.</p>
+
+<p><img src="http://farm9.staticflickr.com/8373/8594568086_a4c31bf22a_n.jpg" alt=""></p>
+
+<p><code>weibull</code>
+    Plot both weibull PDF distribution and hourly distribution</p>
+
+<p><img src="http://farm9.staticflickr.com/8510/8594568080_1609d562f1.jpg" alt=""></p>
+
+<h2>Toolbox</h2>
+
+<p><code>weibull_hourly</code> 
+    Calculate weibull distribution and annual hours from Weibull k and A/Vmean</p>
+
+<p><img src="http://farm9.staticflickr.com/8389/8593487567_a4317d6a3a.jpg" alt=""></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/wrobstory">wrobstory</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
