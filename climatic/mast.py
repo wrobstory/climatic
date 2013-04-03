@@ -60,7 +60,7 @@ class MetMast(object):
                                          zone_or_none)
 
     def wind_import(self, path, columns=None, header_row=None, time_col=None,
-                    delimiter=',', smart_headers=False, **kwargs):
+                    delimiter=',', smart_headers=False, subs=None, **kwargs):
         '''Wind data import. This is a very thin wrapper on the pandas
         read_table method, with the option to pass keyword arguments to
         pandas read_table if needed.
@@ -77,6 +77,9 @@ class MetMast(object):
             Column with the timestamps
         delimiter: string, default=','
             File delimiter
+        subs: dict, default None
+            dict of regex substitutions to make in the header. Optional. 
+            Ex: subs = {'Ch1': 'WS', 'Ch2': WD}
         smart_headers: boolean, default False
             Uses NLTK text classifier to predict column headers
 
@@ -122,6 +125,16 @@ class MetMast(object):
 
             print('Parsing headers with smart_headers...')
             data_columns = self.data.columns.tolist()
+            #Replace with sub'd values if given
+            if subs: 
+            #Need to refactor this at some point...
+                temp = []
+                for col in data_columns: 
+                    for key, value in subs.iteritems(): 
+                        if re.match(key, col):
+                            temp.append(re.sub(key, value, col))  
+                data_columns = temp       
+            
             data_columns = [x.strip().lower() for x in data_columns]
 
             #Import NLTK classifier (see header_classifier.py)
@@ -141,10 +154,10 @@ class MetMast(object):
             columns = []
             for x, cols in enumerate(data_columns):
                 get_col = classifier.classify(features(cols))
-                get_height = re.search(r'([0-9.]+\s*m) | ([0-9.]+\s*ft)',
+                get_height = re.search(r'([0-9.]+\s*m)|([0-9.]+\s*ft)',
                                        cols)
                 if get_height:
-                    height = float(re.split(r'm | ft', get_height.group())[0])
+                    height = float(re.split(r'm|ft', get_height.group())[0])
                 elif self.height:
                     print(('Smart Headers could not find a height in the '
                            'header string. Defaulting to met mast "height" '

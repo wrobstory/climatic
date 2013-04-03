@@ -43,4 +43,12 @@ my_mast.binned(column=('WS Mean 1', 20), bins=np.arange(0, 41, 1))
 #Bin data max by wind direction, create frequency plot of WS
 my_mast.binned(column=('WD Mean 1', 20), bins=np.arange(0, 375, 15), 
                stat='max', name='WD1_Max', plot=('WS Mean 1', 20))
+               
+#More complicated case, with NRG formatted data
+NRG_mast = cl.MetMast(height=50)
+    
+#Do not forget your delimiter, or bad parsing things will happen...
+NRG_mast.wind_import(r'Walsenburg_South_3704_SDR_2010_0601_to_2012_0607.txt', 
+                     header_row=140, time_col=0, 
+                     delimiter='\t', smart_headers=False)
 
