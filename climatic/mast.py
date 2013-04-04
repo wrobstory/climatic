@@ -311,7 +311,7 @@ class MetMast(object):
             Attribute name for binned data. Will create a new MetMast 
             attribute with binned data. 
         plot: tuple, default None
-            If you are binning by direction, plot=column_name will pass the 
+            If you are binning by wind direction, plot=column_name will pass the 
             data to plottools.wind_rose
             
         Returns: 

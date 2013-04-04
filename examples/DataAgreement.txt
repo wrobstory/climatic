@@ -1,3 +1,7 @@
+# =====================
+# USDOE Data Disclaimer
+# =====================
+
 This data and software ("Data") is provided by the National Renewable Energy
 Laboratory ("NREL"), which is operated by the Alliance for Sustainable Energy,
 LLC ("ALLIANCE") for the U.S. Department of Energy ("DOE").
@@ -28,3 +32,14 @@ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER, INCLUDING BUT NOT LIMITED TO
 CLAIMS ASSOCIATED WITH THE LOSS OF DATA OR PROFITS, WHICH MAY RESULT FROM AN
 ACTION IN CONTRACT, NEGLIGENCE OR OTHER TORTIOUS CLAIM THAT ARISES OUT OF OR IN
 CONNECTION WITH THE ACCESS, USE OR PERFORMANCE OF THESE DATA.
+
+# =====================
+# Walsenburg South Data
+# =====================
+This data was collected as part of the Colorado Anemometer Loan program. More
+information on this program can be found at the following location: 
+http://www.engr.colostate.edu/ALP/
+
+A complete analysis of the Walsenburg South data can be found at:
+http://www.engr.colostate.edu/ALP/ALP_78_Walsenburg_South.htm
+

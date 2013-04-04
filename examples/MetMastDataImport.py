@@ -14,8 +14,9 @@ disclaimer.
 The USDOE examples are measured in mph, but until better (free) met data 
 can be acquired, we're going to treat them as m/s
 '''
-
+import numpy as np
 import climatic as cl
+
 
 #Create Met Mast object
 my_mast = cl.MetMast(lat=46.9083, lon=109.808, height=20)
@@ -44,11 +45,17 @@ my_mast.binned(column=('WS Mean 1', 20), bins=np.arange(0, 41, 1))
 my_mast.binned(column=('WD Mean 1', 20), bins=np.arange(0, 375, 15), 
                stat='max', name='WD1_Max', plot=('WS Mean 1', 20))
                
-#More complicated case, with NRG formatted data
-NRG_mast = cl.MetMast(height=50)
+#More interesting case...
+walsenburg = cl.MetMast(height=50)
     
 #Do not forget your delimiter, or bad parsing things will happen...
-NRG_mast.wind_import(r'Walsenburg_South_3704_SDR_2010_0601_to_2012_0607.txt', 
-                     header_row=140, time_col=0, 
-                     delimiter='\t', smart_headers=False)
+walsenburg.wind_import(r'CO_Walsenburg_South_Data.txt', 
+                       header_row=0, time_col=0, 
+                       delimiter='\t', smart_headers=True)
+                       
+#Lets look at WS binned by frequency...
+walsenburg.binned(column=('WD Mean 1', 49.0), bins=np.arange(0, 375, 15), 
+                  name='WSMean1', plot=('WS Mean 1', 50.0))
+                  
+#The binned data now lives in walsenburg.data_binned_WSMean1
 
