@@ -24,7 +24,7 @@ kw = {
     'name': 'climatic',
     'version': '0.1.0',
     'description': 'A small toolbox of wind data plotting tools',
-    'long_description': open(join(path, 'README.rst')).read(),
+    'long_description': open(join(path, 'README.md')).read(),
     'author': 'Rob Story',
     'author_email': 'wrobstory@gmail.com',
     'license': 'MIT License',
